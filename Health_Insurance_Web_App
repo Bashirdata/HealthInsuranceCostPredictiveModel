@@ -1,1 +1,52 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul  9 16:41:23 2025
+@author: FBI SURVEILLANCE
+"""
+
+import streamlit as st
+import joblib
+
+def main():
+    #the style block
+    html_temp = """
+    <div style="background-color:lightblue; padding:16px">
+    <h2 style="color:black; text-align:center;">Health Insurance Cost Prediction WebApp</h2>
+    </div>
+    """
+
+    st.markdown(html_temp, unsafe_allow_html=True)
+
+    # Load model
+    model = joblib.load(r'C:\Users\FBI SURVEILLANCE\Downloads\E-E ML Projects\model_joblib_gr.pkl')
+
+
+    # Input fields
+    p1 = st.slider('Enter Your Age', 18, 100)
+
+    s1 = st.selectbox('Sex', ('Male', 'Female'))
+    p2 = 1 if s1 == 'Male' else 0
+
+    p3 = st.number_input('Enter Your BMI value', min_value=10.0, max_value=60.0, step=0.1)
+
+    p4 = st.slider('Enter Number of Children', 0, 4)
+
+    s2 = st.selectbox('Smoker', ('Yes', 'No'))
+    p5 = 1 if s2 == 'Yes' else 0
+
+    # Region as categorical input
+    region = st.selectbox('Region', ['Northeast', 'Northwest', 'Southeast', 'Southwest'])
+    region_map = {'Northeast': 0, 'Northwest': 1, 'Southeast': 2, 'Southwest': 3}
+    p6 = region_map[region]
+
+    # Predict button
+    if st.button('Predict'):
+        # Correct input shape: must be 2D
+        pred = model.predict([[p1, p2, p3, p4, p5, p6]])
+        st.balloons()
+        st.success(f'Estimated Insurance Cost: ${pred[0]:,.2f}')
+
+#name condition
+if __name__ == '__main__':
+    main()
 
